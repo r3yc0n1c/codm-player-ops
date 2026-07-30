@@ -1,0 +1,23 @@
+{
+  "name": "codm-player-ops",
+  "version": "1.0.0",
+  "description": "To install dependencies:",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "tsx src/test-browser.ts",
+    "claim": "tsx src/claim-daily-gift.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^26.1.2",
+    "tsx": "^4.23.1",
+    "typescript": "^7.0.2"
+  },
+  "dependencies": {
+    "dotenv": "^17.4.2",
+    "playwright": "^1.62.0"
+  }
+}
