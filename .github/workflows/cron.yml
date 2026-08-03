@@ -4,16 +4,24 @@ on:
   schedule:
     # Every day at 7:00 IST = 1:30 UTC
     - cron: "30 1 * * *"
-
   workflow_dispatch:
 
 jobs:
   claim-gift:
     runs-on: ubuntu-latest
-
     environment: prod
-
     timeout-minutes: 15
+
+    strategy:
+      fail-fast: false
+      matrix:
+        player:
+          - name: Player 1
+            id: 1
+          - name: Player 2
+            id: 2
+
+    name: Claim gift — ${{ matrix.player.name }}
 
     steps:
       - name: Checkout repo
@@ -40,8 +48,17 @@ jobs:
       - name: Run CODM Gift Bot
         env:
           NODE_ENV: production
-          CODM_PLAYER_ID: ${{ secrets.CODM_PLAYER_ID }}
           CODM_STORE_URL: ${{ secrets.CODM_STORE_URL }}
           HEADLESS: true
+          # Load all necessary secrets into the step's environment variables
+          PLAYER_1_SECRET: ${{ secrets.CODM_PLAYER_ID_1 }}
+          PLAYER_2_SECRET: ${{ secrets.CODM_PLAYER_ID_2 }}
+        run: |
+          # Dynamically assign the right secret to CODM_PLAYER_ID based on the matrix ID
+          if [ "${{ matrix.player.id }}" == "1" ]; then
+            export CODM_PLAYER_ID=$PLAYER_1_SECRET
+          elif [ "${{ matrix.player.id }}" == "2" ]; then
+            export CODM_PLAYER_ID=$PLAYER_2_SECRET
+          fi
 
-        run: npm run claim
+          npm run claim
