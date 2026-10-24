@@ -21,7 +21,7 @@ jobs:
           - name: Player 2
             id: 2
 
-    name: Claim gift — ${{ matrix.player.name }}
+    name: Claim gift - ${{ matrix.player.name }}
 
     steps:
       - name: Checkout repo
@@ -56,9 +56,11 @@ jobs:
         run: |
           # Dynamically assign the right secret to CODM_PLAYER_ID based on the matrix ID
           if [ "${{ matrix.player.id }}" == "1" ]; then
-            export CODM_PLAYER_ID=$PLAYER_1_SECRET
+            export CODM_PLAYER_ID=$PLAYER_1_SECRET            
           elif [ "${{ matrix.player.id }}" == "2" ]; then
             export CODM_PLAYER_ID=$PLAYER_2_SECRET
           fi
+
+          echo "Claiming for ${{ matrix.player.name }} [$(echo $CODM_PLAYER_ID | base64)]"
 
           npm run claim
